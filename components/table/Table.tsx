@@ -1,40 +1,110 @@
-import { Table as ChakraTable, TableCaption, Thead, Tr, Td, Tbody, Th, Tfoot } from '@chakra-ui/react';
+import { Table as ChakraTable, Thead, Tr, Td, Tbody, Th } from '@chakra-ui/react';
+import { useMemo } from 'react';
+import { AiOutlineStar } from "react-icons/ai";
+import { useTable, useSortBy } from 'react-table';
+
+interface ColumnDetails {
+  [key: string]: any
+}
 
 const Table = (props: any) => {
+
+  const data = useMemo<ColumnDetails[]>(
+    () => [
+      {
+        star: <AiOutlineStar />,
+        rank: '1',
+        price: '$0.01237012',
+        twentyFour: '5%',
+        sevenDays: '20%',
+        marketCap: '$1000000000',
+        volume: '$ 1000000000',
+        supply: '21049124124 BTC',
+      }
+    ],
+    []
+  )
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: '',
+        accessor: 'star',
+      },
+      {
+        Header: '#',
+        accessor: 'rank',
+      },
+      {
+        Header: 'Price',
+        accessor: 'price',
+      },
+      {
+        Header: '24%',
+        accessor: 'twentyFour'
+      },
+      {
+        Header: '7d%',
+        accessor: 'sevenDays'
+      },
+      {
+        Header: 'Market Cap',
+        accessor: 'marketCap'
+      },
+      {
+        Header: 'Volume(24h)',
+        accessor: 'volume'
+      },
+      {
+        Header: 'Supply',
+        accessor: 'supply'
+      },
+    ],
+    []
+  )
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({ columns, data })
+
   return (
     <ChakraTable variant="simple" {...props}>
-      <TableCaption>Imperial to metric conversion factors</TableCaption>
       <Thead>
-        <Tr>
-          <Th>To convert</Th>
-          <Th>into</Th>
-          <Th isNumeric>multiply by</Th>
+      {headerGroups.map(headerGroup => (
+        // eslint-disable-next-line react/jsx-key
+        <Tr {...headerGroup.getHeaderGroupProps()}>
+          {headerGroup.headers.map((column) => (
+            // eslint-disable-next-line react/jsx-key
+            <Th
+              {...column.getHeaderProps()}
+            >
+              {column.render('Header')}
+            </Th>
+          ))}
         </Tr>
+      ))}
       </Thead>
-      <Tbody>
-        <Tr>
-          <Td>inches</Td>
-          <Td>millimetres (mm)</Td>
-          <Td isNumeric>25.4</Td>
-        </Tr>
-        <Tr>
-          <Td>feet</Td>
-          <Td>centimetres (cm)</Td>
-          <Td isNumeric>30.48</Td>
-        </Tr>
-        <Tr>
-          <Td>yards</Td>
-          <Td>metres (m)</Td>
-          <Td isNumeric>0.91444</Td>
-        </Tr>
-      </Tbody>
-      <Tfoot>
-        <Tr>
-          <Th>To convert</Th>
-          <Th>into</Th>
-          <Th isNumeric>multiply by</Th>
-        </Tr>
-      </Tfoot>
+      <Tbody {...getTableBodyProps()}>
+          {rows.map(
+            (row, i) => {
+              prepareRow(row);
+              return (
+                // eslint-disable-next-line react/jsx-key
+                <Tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                    )
+                  })}
+                </Tr>
+              )}
+          )}
+        </Tbody>
     </ChakraTable>
   )
 }
