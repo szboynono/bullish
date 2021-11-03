@@ -1,17 +1,9 @@
 import type { NextPage } from 'next'
-import { Button } from "@chakra-ui/react"
-import styled from '@emotion/styled'
-
-const Title = styled.h1`
-  color: red;
-`
+import Layout from '../components/Layout';
 
 const Home: NextPage = () => {
   return (
-    <div>
-      <Title>text</Title>
-      <Button colorScheme="blue">Button</Button>
-    </div>
+    <Layout>hahah</Layout>
   )
 }
 
